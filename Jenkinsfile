@@ -24,14 +24,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building application with Maven...'
-                bat 'mvn clean compile'
+                sh 'mvn clean compile'
             }
         }
         
         stage('Test') {
             steps {
                 echo 'Running unit tests...'
-                bat 'mvn test'
+                sh 'mvn test'
             }
             post {
                 always {
@@ -43,7 +43,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Creating WAR package...'
-                bat 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
             post {
                 success {
@@ -56,7 +56,7 @@ pipeline {
             steps {
                 echo 'Running code quality checks...'
                 // Add SonarQube or other quality tools here
-                bat 'mvn verify -DskipTests'
+                sh 'mvn verify -DskipTests'
             }
         }
         
@@ -64,8 +64,8 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
-                    bat "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    bat "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
+                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                 }
             }
         }
@@ -75,7 +75,7 @@ pipeline {
                 echo 'Scanning Docker image for vulnerabilities...'
                 // Add Trivy or other security scanning tools
                 script {
-                    bat "docker inspect ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    sh "docker inspect ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
@@ -85,7 +85,7 @@ pipeline {
                 echo 'Deploying to Tomcat...'
                 script {
                     // Option 1: Direct WAR deployment
-                    bat """
+                    sh """
                         curl -v -u ${TOMCAT_CREDENTIALS_USR}:${TOMCAT_CREDENTIALS_PSW} \
                         -T target/devops-app.war \
                         "${TOMCAT_URL}/manager/text/deploy?path=/devops-app&update=true"
@@ -99,9 +99,9 @@ pipeline {
                 echo 'Deploying Docker container...'
                 script {
                     // Stop and remove existing container
-                    bat 'docker-compose down || exit 0'
+                    sh 'docker-compose down || exit 0'
                     // Start new container
-                    bat 'docker-compose up -d'
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -111,7 +111,7 @@ pipeline {
                 echo 'Performing health check...'
                 sleep time: 30, unit: 'SECONDS'
                 script {
-                    bat 'curl -f http://localhost:8080/health || exit 1'
+                    sh 'curl -f http://localhost:8080/health || exit 1'
                 }
             }
         }
@@ -120,7 +120,7 @@ pipeline {
             steps {
                 echo 'Running smoke tests...'
                 script {
-                    bat 'curl -f http://localhost:8080/hello || exit 1'
+                    sh 'curl -f http://localhost:8080/hello || exit 1'
                 }
             }
         }
