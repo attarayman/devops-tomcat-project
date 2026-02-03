@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  devops-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devops-tomcat-app
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - devops-network
+
+networks:
+  devops-network:
+    driver: bridge
