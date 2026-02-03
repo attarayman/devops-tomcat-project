@@ -137,7 +137,6 @@ pipeline {
         }
         always {
             echo 'Cleaning up...'
-            cleanWs()
         }
     }
 }
