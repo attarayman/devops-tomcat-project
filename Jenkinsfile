@@ -9,8 +9,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'devops-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
-        TOMCAT_URL = 'http://localhost:8080'
-        TOMCAT_CREDENTIALS = credentials('tomcat-credentials')
     }
     
     stages {
@@ -126,4 +124,5 @@ pipeline {
         }
     }
 }
+
 
