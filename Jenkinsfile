@@ -79,20 +79,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy to Tomcat') {
-            steps {
-                echo 'Deploying to Tomcat...'
-                script {
-                    // Option 1: Direct WAR deployment
-                    sh """
-                        curl -v -u ${TOMCAT_CREDENTIALS_USR}:${TOMCAT_CREDENTIALS_PSW} \
-                        -T target/devops-app.war \
-                        "${TOMCAT_URL}/manager/text/deploy?path=/devops-app&update=true"
-                    """
-                }
-            }
-        }
         
         stage('Deploy Docker Container') {
             steps {
@@ -140,3 +126,4 @@ pipeline {
         }
     }
 }
+
