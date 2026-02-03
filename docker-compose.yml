@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   devops-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: devops-app:latest
     container_name: devops-tomcat-app
     ports:
       - "8080:8080"
@@ -23,3 +21,4 @@ services:
 networks:
   devops-network:
     driver: bridge
+
