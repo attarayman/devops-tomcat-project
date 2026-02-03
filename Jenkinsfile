@@ -79,7 +79,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy to Tomcat') {
             steps {
                 echo 'Deploying to Tomcat...'
